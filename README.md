@@ -35,6 +35,14 @@ The compatibility flag is needed because this repository's `react-player-control
 
 Open **http://127.0.0.1:3000/demo**. This URL always shows the welcome experience, even if you previously logged in. Signed-out visitors also see it at `/`.
 
+After the installs, just execute the following commands to run the demo.
+
+```bash
+cd /Users/william/spotify-react-web-client
+nvm use 24
+npm run dev
+```
+
 ### Walk through it
 
 1. Click **Import your music** on the login screen.
