@@ -33,7 +33,7 @@ export const loginToSpotify = createAsyncThunk<{ token?: string; loaded: boolean
     if (requestUser) thunkAPI.dispatch(fetchUser());
 
     if (!requestedToken) {
-      login.logInWithSpotify();
+      await login.logInWithSpotify();
     } else {
       axios.defaults.headers.common['Authorization'] = 'Bearer ' + requestedToken;
     }
@@ -68,6 +68,12 @@ const authSlice = createSlice({
     });
     builder.addCase(fetchUser.fulfilled, (state, action) => {
       state.user = action.payload;
+      state.requesting = false;
+    });
+    builder.addCase(loginToSpotify.rejected, (state) => {
+      state.requesting = false;
+    });
+    builder.addCase(fetchUser.rejected, (state) => {
       state.requesting = false;
     });
   },

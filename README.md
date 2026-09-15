@@ -17,6 +17,46 @@
 
 # 🎧 Spotify React Web Client
 
+## Music import login demo
+
+A welcome screen for listeners switching to Spotify: choose **Import your music**, select your current service, then continue to TuneMyMusic. The welcome screen and provider picker run without an API key or a Spotify account.
+
+### Run the demo
+
+Use **Node.js 24 LTS** (or Node 22.12+). With `nvm`, run `nvm install 24` and `nvm use 24` first.
+
+```bash
+cd /Users/william/spotify-react-web-client
+npm install --legacy-peer-deps --package-lock=false
+npm run dev
+```
+
+The compatibility flag is needed because this repository's `react-player-controls` package declares older React peer dependencies. The existing Yarn lockfile remains the repository's lockfile; alternatively, use `yarn install --frozen-lockfile` with Yarn Classic.
+
+Open **http://127.0.0.1:3000/demo**. This URL always shows the welcome experience, even if you previously logged in. Signed-out visitors also see it at `/`.
+
+### Walk through it
+
+1. Click **Import your music** on the login screen.
+2. Choose **Apple Music**, **YouTube Music**, **Amazon Music**, or **Another service**.
+3. Click **Continue with TuneMyMusic**. A new tab opens the corresponding transfer page (or the service chooser for another provider).
+4. On TuneMyMusic, connect your source account, choose your music, connect Spotify as the destination, and confirm the transfer. If you are new to Spotify, use **Create a free account first** in the dialog.
+
+The local demo demonstrates discovery, provider selection, and the real external handoff. Actual transfers and account permissions happen on TuneMyMusic; this app does not simulate a completed import or receive transfer status. Service limits, matching results, and any fees are shown by TuneMyMusic. The original playlists remain on the source service.
+
+**Login:** without `.env` credentials, **Log in to Spotify** opens Spotify's official login page; it does not authenticate this local client. To use the existing player, follow the Spotify developer setup below, restart the server, and open `/`. Configured login uses the project's existing OAuth flow.
+
+**Verify a production build:**
+
+```bash
+npm run build
+npm run preview
+```
+
+Then open **http://127.0.0.1:3000/demo**. Stop either server with **Ctrl+C**.
+
+Reference: [Spotify's playlist-import support](https://support.spotify.com/us/article/importing-your-playlists-to-spotify/) and [TuneMyMusic](https://www.tunemymusic.com/).
+
 > [!IMPORTANT]
 > Spotify Playback requires users to authenticate with a valid Spotify Premium subscription.
 

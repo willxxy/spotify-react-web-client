@@ -26,6 +26,10 @@ import WebPlayback, { WebPlaybackProps } from './utils/spotify/webPlayback';
 import SearchContainer from './pages/Search/Container';
 import { playerService } from './services/player';
 import { Spinner } from './components/spinner/spinner';
+import Welcome from './pages/Welcome';
+
+// A stable URL for presenting the welcome flow, even with a saved Spotify session.
+const isWelcomeDemo = window.location.pathname === '/demo';
 
 const Home = lazy(() => import('./pages/Home'));
 const Page404 = lazy(() => import('./pages/404'));
@@ -64,13 +68,16 @@ const SpotifyContainer: FC<{ children: any }> = memo(({ children }) => {
   const requesting = useAppSelector((state) => state.auth.requesting);
 
   useEffect(() => {
+    if (isWelcomeDemo) return;
     const tokenInLocalStorage = getFromLocalStorageWithExpiry('access_token');
     dispatch(authActions.setToken({ token: tokenInLocalStorage }));
 
     if (tokenInLocalStorage) {
       dispatch(authActions.fetchUser());
-    } else {
+    } else if (new URLSearchParams(window.location.search).has('code')) {
       dispatch(loginToSpotify());
+    } else {
+      dispatch(authActions.setRequesting({ requesting: false }));
     }
   }, [dispatch]);
 
@@ -107,7 +114,8 @@ const SpotifyContainer: FC<{ children: any }> = memo(({ children }) => {
     [dispatch, token]
   );
 
-  if (!user) return <Spinner loading={requesting}>{children}</Spinner>;
+  if (isWelcomeDemo) return <Welcome />;
+  if (!user) return <Spinner loading={requesting}><Welcome /></Spinner>;
 
   return <WebPlayback {...webPlaybackSdkProps}>{children}</WebPlayback>;
 });
